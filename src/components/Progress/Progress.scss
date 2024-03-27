@@ -1,0 +1,25 @@
+@use "../../scss/palette" as palette;
+
+$block: "tgui-progress";
+
+.#{$block} {
+  display: block;
+  appearance: none;
+  -webkit-appearance: none;
+  height: 4px;
+
+  &::-webkit-progress-value {
+    background-color: palette.refer-bem-css-var($block, "value-color", "link-color");
+    border-radius: 1000px;
+    transition: width 100ms ease-in-out;
+  }
+
+  &--ios::-webkit-progress-bar {
+    background-color: transparent;
+  }
+
+  &--base::-webkit-progress-bar {
+    background-color: palette.refer-bem-css-var($block, "bg-color", "secondary-fill");
+    border-radius: 1000px;
+  }
+}

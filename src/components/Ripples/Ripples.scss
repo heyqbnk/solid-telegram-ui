@@ -1,0 +1,37 @@
+.tgui-ripples {
+  position: relative;
+
+  &__ripples {
+    overflow: hidden;
+    position: absolute;
+    inset: 0;
+  }
+
+  &__ripple {
+    position: absolute;
+    border-radius: 50%;
+    background-color: #ffffffb3;
+
+    &--enter-active,
+    &--exit-active {
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    &--enter {
+      transform: scale3d(0, 0, 0);
+    }
+
+    &--exit-to {
+      opacity: 0;
+    }
+  }
+
+  &__content {
+    position: relative;
+    z-index: 1;
+
+    &--overlay {
+      z-index: 0;
+    }
+  }
+}

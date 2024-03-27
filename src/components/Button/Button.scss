@@ -1,0 +1,254 @@
+@use "sass:math";
+@use "../../scss/palette" as palette;
+
+$icon-size: 24px;
+$block: "tgui-button";
+
+$variant-colors: (
+  "fill": (
+    "background": palette.refer-css-var(--#{$block}-fill-bg-color, "button-color"),
+    "text": palette.refer-css-var(--#{$block}-fill-text-color, "button-text-color"),
+    "ripple": #ffffff40,
+    "active-opacity": (
+      "ios": 0.65
+    ),
+    "hover-opacity": (
+      "base": 0.85,
+      "ios": 0.85,
+    )
+  ),
+  "bezeled": (
+    "background": palette.refer-css-var(--#{$block}-bezeled-bg-color, "secondary-fill"),
+    "background:hover": #DDEAFF,
+    "text": palette.refer-css-var(--#{$block}-bezeled-text-color, "link-color"),
+    "ripple": #007aff26,
+  ),
+  "plain": (
+    "background": transparent,
+    "background:hover": rgba(0, 122, 255, 0.03),
+    "text": palette.refer-css-var(--#{$block}-plain-text-color, "link-color"),
+    "ripple": #007aff26,
+  ),
+  "gray": (
+    "background": palette.refer-css-var(--#{$block}-gray-bg-color, "plain-background"),
+    "text": palette.refer-css-var(--#{$block}-gray-text-color, "plain-foreground"),
+    "ripple": #0000000e,
+    "active-opacity": (
+      "ios": 0.65
+    ),
+    "hover-opacity": (
+      "base": 0.5,
+      "ios": 0.85,
+    )
+  ),
+  "outline": (
+    "background": transparent,
+    "border": palette.refer-css-var(--#{$block}-outline-border-color, "outline"),
+    "text": palette.refer-css-var(--#{$block}-outline-text-color, "plain-foreground"),
+    "ripple": #0000000e,
+    "active-opacity": (
+      "ios": 0.65
+    ),
+    "hover-opacity": (
+      "base": 0.5,
+      "ios": 0.85,
+    )
+  ),
+  "white": (
+    "background": #ffffff,
+    "text": palette.refer-css-var(--#{$block}-white-text-color, "plain-foreground"),
+    "ripple": #0000000e,
+    "active-opacity": (
+      "ios": 0.65
+    ),
+    "hover-opacity": (
+      "base": 0.5,
+      "ios": 0.85,
+    )
+  ),
+);
+
+$sizes: (
+  "base": (
+    "border-radius": 8px,
+    "sizes": (
+      "sm": (
+        "height": 38px,
+        "padding-x": 12px,
+      ),
+      "md": (
+        "height": 42px,
+        "padding-x": 14px,
+      ),
+      "lg": (
+        "height": 50px,
+        "padding-x": 18px,
+      )
+    ),
+  ),
+  "ios": (
+    "border-radius": 12px,
+    "sizes": (
+      "sm": (
+        "height": 36px,
+        "padding-x": 12px,
+      ),
+      "md": (
+        "height": 42px,
+        "padding-x": 14px,
+      ),
+      "lg": (
+        "height": 50px,
+        "padding-x": 18px,
+        "border-radius": 10px
+      )
+    ),
+  )
+);
+
+@mixin sizes($platform) {
+  @each $size-type, $size-settings in map-get(map-get($sizes, $platform), "sizes") {
+    $height: map-get($size-settings, "height");
+
+    &-#{$size-type} {
+      height: $height;
+      padding: #{math.div($height - $icon-size - 2, 2)} map-get($size-settings, "padding-x");
+    }
+  }
+}
+
+.#{$block} {
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  appearance: none;
+  padding: 0;
+  transition: opacity 75ms;
+
+  &--base {
+    @include sizes("base");
+  }
+
+  &--ios {
+    @include sizes("ios");
+  }
+
+  // Background and text colors.
+  @each $variant, $variant-settings in $variant-colors {
+    &--#{$variant} {
+      background-color: map-get($variant-settings, "background");
+      color: map-get($variant-settings, "text");
+
+      &:not([disabled]):hover {
+        background-color: map-get($variant-settings, "background:hover");
+      }
+    }
+  }
+
+  // Hover and active opacity.
+  @each $variant, $variant-settings in $variant-colors {
+    $active-opacity: map-get($variant-settings, "active-opacity");
+    $hover-opacity: map-get($variant-settings, "hover-opacity");
+
+    @each $platform in ["base", "ios"] {
+      &--#{$platform}-#{$variant} {
+        @if $hover-opacity {
+          &:hover {
+            opacity: map-get($hover-opacity, $platform);
+          }
+        }
+
+        @if $active-opacity {
+          &:active {
+            opacity: map-get($active-opacity, $platform);
+          }
+        }
+      }
+    }
+  }
+
+  // Border radius.
+  @each $platform, $platform-settings in $sizes {
+    &--#{$platform} {
+      border-radius: map-get($platform-settings, "border-radius");
+
+      @each $size-type, $size-settings in map-get($platform-settings, "sizes") {
+        $border-radius: map-get($size-settings, "border-radius");
+
+        @if $border-radius {
+          &-#{$size-type} {
+            border-radius: $border-radius;
+          }
+        }
+      }
+    }
+  }
+
+  &[disabled] {
+    opacity: .35;
+  }
+
+  &--rounded {
+    border-radius: 1000px;
+  }
+
+  &--stretched {
+    width: 100%;
+  }
+
+  // RIPPLES.
+  &__ripples {
+    height: 100%;
+    width: 100%;
+    border: 1px solid transparent;
+    border-radius: inherit;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 75ms;
+
+    &--base {
+      gap: 12px;
+    }
+
+    &--ios {
+      gap: 10px;
+    }
+
+    // Border colors.
+    @each $variant, $variant-settings in $variant-colors {
+      $border-color: map-get($variant-settings, "border");
+
+      @if $border-color {
+        &--#{$variant} {
+          border-color: $border-color;
+        }
+      }
+    }
+  }
+
+  // RIPPLE.
+  &__ripple {
+    // Colors.
+    @each $variant, $variant-settings in $variant-colors {
+      &--#{$variant} {
+        background-color: map-get($variant-settings, "ripple");
+      }
+    }
+  }
+
+   // ICON CONTAINER.
+  &__icon-container {
+    aspect-ratio: 1;
+    width: $icon-size;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // ICON
+  &__icon {
+    color: currentColor;
+  }
+}

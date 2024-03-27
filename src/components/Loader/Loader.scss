@@ -1,0 +1,142 @@
+@use "../../scss/palette" as palette;
+
+$base-settings: (
+  "sm": (
+    "width": 18px,
+    "stroke-width": 2.5px,
+    "strokes": (
+      "0%": [#{1, 56}, 0],
+      "50%": [#{43, 56}, -15],
+      "100%": [#{43, 56}, -56],
+    )
+  ),
+  "md": (
+    "width": 36px,
+    "stroke-width": 3.5px,
+    "strokes": (
+      "0%": [#{1, 112}, 0],
+      "50%": [#{89, 112}, -25],
+      "100%": [#{89, 112}, -112],
+    )
+  ),
+  "lg": (
+    "width": 44px,
+    "stroke-width": 4px,
+    "strokes": (
+      "0%": [#{1, 138}, 0],
+      "50%": [#{100, 138}, -40],
+      "100%": [#{100, 138}, -138],
+    )
+  )
+);
+
+$ios-sizes: (
+  "sm": (
+    "root": 24px,
+    "line-width": 2.4px,
+    "line-height": 7px
+  ),
+  "md": (
+    "root": 28px,
+    "line-width": 2.5px,
+    "line-height": 7.4px
+  ),
+  "lg": (
+    "root": 32px,
+    "line-width": 3px,
+    "line-height": 8px
+  )
+);
+
+$block: "tgui-loader";
+
+.#{$block} {
+  display: block;
+  aspect-ratio: 1;
+
+  &--base {
+    color: palette.refer-bem-css-var($block, "base-color", "link-color");
+    stroke: currentColor;
+    stroke-linecap: round;
+
+    @each $size-type, $size-settings in $base-settings {
+      &-#{$size-type} {
+        width: map-get($size-settings, "width");
+        stroke-width: map-get($size-settings, "stroke-width");
+        animation: #{$block}-base-dash-#{$size-type} 2s ease infinite,
+        #{$block}-base-rotate 2s linear infinite;
+      }
+
+      @keyframes #{$block}-base-dash-#{$size-type} {
+        @each $percentage in ["0%", "50%", "100%"] {
+          $stroke-settings: map-get(map-get($size-settings, "strokes"), $percentage);
+
+          #{$percentage} {
+            stroke: {
+              dasharray: nth($stroke-settings, 1);
+              dashoffset: nth($stroke-settings, 2);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &--ios {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: palette.refer-bem-css-var($block, "ios-color", "hint-color");
+
+    @each $size-type, $size-settings in $ios-sizes {
+      &-#{$size-type} {
+        width: map-get($size-settings, "root");
+      }
+    }
+  }
+
+  &__android-container {
+    fill: transparent;
+    overflow: visible;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__ios-line {
+    position: absolute;
+    background-color: currentColor;
+    border-radius: 1000px;
+    transform-origin: center;
+    animation: #{$block}-ios-fade 800ms linear infinite;
+    opacity: .1;
+
+    @each $size-type, $size-settings in $ios-sizes {
+      &--#{$size-type} {
+        width: map-get($size-settings, "line-width");
+        height: map-get($size-settings, "line-height");
+      }
+    }
+  }
+}
+
+@keyframes #{$block}-ios-fade {
+  0% {
+    opacity: 1
+  }
+  44% {
+    opacity: 1;
+  }
+  100% {
+    opacity: .1
+  }
+}
+
+@keyframes #{$block}-base-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
