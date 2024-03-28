@@ -34,13 +34,7 @@ export const Loader: WithConfigComponent<LoaderProps> = withConfig(
         >
           <For each={new Array(8).fill(null)}>
             {(_item, index) => (
-              <div
-                class={classes().iosLine}
-                style={{
-                  'animation-delay': `${100 * index()}ms`,
-                  transform: `rotate(${45 * index()}deg) translate3d(0, -115%, 0)`,
-                }}
-              />
+              <div class={classes().iosLine} style={{ '--index': index() }}/>
             )}
           </For>
         </Show>

@@ -110,6 +110,8 @@ $block: "tgui-loader";
     transform-origin: center;
     animation: #{$block}-ios-fade 800ms linear infinite;
     opacity: .1;
+    animation-delay: calc(100ms * var(--index));
+    transform: rotate(calc(45deg * var(--index))) translate3d(0, -115%, 0);
 
     @each $size-type, $size-settings in $ios-sizes {
       &--#{$size-type} {
