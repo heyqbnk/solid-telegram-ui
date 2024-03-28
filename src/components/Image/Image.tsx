@@ -5,7 +5,7 @@ import { withConfig } from '~/hocs/withConfig.js';
 import { createImageResource } from '~/reactivity/createImageResource.js';
 import type { WithConfigComponent } from '~/hocs/withConfig.js';
 
-import { BemBlockClassNames } from '~/styles/bem/BemBlockClassNames.js';
+import { bemcn } from '~/styles/bemcn.js';
 import { createClasses } from '~/styles/createClasses.js';
 import { styled } from '~/styles/styled.js';
 
@@ -13,7 +13,7 @@ import type { ImageProps } from './Image.types.js';
 
 import './Image.scss';
 
-const block = new BemBlockClassNames('tgui-image');
+const block = bemcn('tgui-image');
 
 // TODO: We have to make image transition better.
 // TODO: Skeleton?

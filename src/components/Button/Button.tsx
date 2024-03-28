@@ -6,7 +6,7 @@ import { slotToComponent } from '~/helpers/slotToComponent.js';
 import { withConfig } from '~/hocs/withConfig.js';
 import type { WithConfigComponent } from '~/hocs/withConfig.js';
 
-import { BemBlockClassNames } from '~/styles/bem/BemBlockClassNames.js';
+import { bemcn } from '~/styles/bemcn.js';
 import { createClasses } from '~/styles/createClasses.js';
 import { styled } from '~/styles/styled.js';
 
@@ -18,7 +18,7 @@ import type { ButtonDefaults, ButtonProps } from './Button.types.js';
 
 import './Button.scss';
 
-const block = new BemBlockClassNames('tgui-button');
+const block = bemcn('tgui-button');
 
 /**
  * @see Figma: https://www.figma.com/file/AwAi6qE11mQllHa1sOROYp/Telegram-Mini-Apps-Library?type=design&node-id=45-609&mode=design&t=5uMXzbr5N7vuFjxS-0
@@ -112,9 +112,11 @@ export const Button: WithConfigComponent<ButtonProps> = withConfig(
         props.platform,
         `${props.platform}-${props.variant}`,
         `${props.platform}-${props.size}`,
-        props.stretched && 'stretched',
-        props.rounded && 'rounded',
-        props.disabled && 'disabled',
+        {
+          stretched: props.stretched,
+          rounded: props.rounded,
+          disabled: props.disabled,
+        },
       ],
     }),
     iconContainer: block.elem('icon-container').calc(),

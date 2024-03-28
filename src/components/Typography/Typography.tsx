@@ -7,7 +7,7 @@ import { withConfig } from '~/hocs/withConfig.js';
 import type { JSXIntrinsicElement } from '~/types/jsx.js';
 import type { WithPartialConfig } from '~/types/known.js';
 
-import { BemBlockClassNames } from '~/styles/bem/BemBlockClassNames.js';
+import { bemcn } from '~/styles/bemcn.js';
 import { createClasses } from '~/styles/createClasses.js';
 import { styled } from '~/styles/styled.js';
 
@@ -19,7 +19,7 @@ import type {
 
 import './Typography.scss';
 
-const block = new BemBlockClassNames('tgui-typography');
+const block = bemcn('tgui-typography');
 
 export interface TypographyComponent extends Component<WithPartialConfig<TypographyProps>> {
   <Element extends JSXIntrinsicElement>(

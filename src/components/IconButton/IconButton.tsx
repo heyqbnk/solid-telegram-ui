@@ -4,7 +4,7 @@ import { sanitizeProps } from '~/helpers/sanitizeProps.js';
 import { withConfig } from '~/hocs/withConfig.js';
 import type { WithConfigComponent } from '~/hocs/withConfig.js';
 
-import { BemBlockClassNames } from '~/styles/bem/BemBlockClassNames.js';
+import { bemcn } from '~/styles/bemcn.js';
 import { createClasses } from '~/styles/createClasses.js';
 import { styled } from '~/styles/styled.js';
 
@@ -16,7 +16,7 @@ import type {
 
 import './IconButton.scss';
 
-const block = new BemBlockClassNames('tgui-icon-button');
+const block = bemcn('tgui-icon-button');
 
 /**
  * Figma: https://www.figma.com/file/AwAi6qE11mQllHa1sOROYp/Telegram-Mini-Apps-·%C2%A0UI-Kit?type=design&node-id=442-15161&mode=design&t=m05h6QLGMZhDICKu-0

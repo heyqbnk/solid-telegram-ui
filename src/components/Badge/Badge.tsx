@@ -4,7 +4,7 @@ import { sanitizeCommon } from '~/helpers/sanitizeCommon.js';
 import { withConfig } from '~/hocs/withConfig.js';
 import type { WithConfigComponent } from '~/hocs/withConfig.js';
 
-import { BemBlockClassNames } from '~/styles/bem/BemBlockClassNames.js';
+import { bemcn } from '~/styles/bemcn.js';
 import { createClasses } from '~/styles/createClasses.js';
 import { styled } from '~/styles/styled.js';
 
@@ -14,7 +14,7 @@ import type { BadgeDefaults, BadgeProps } from './Badge.types.js';
 
 import './Badge.scss';
 
-const block = new BemBlockClassNames('tgui-badge');
+const block = bemcn('tgui-badge');
 
 /**
  * @see Figma: https://www.figma.com/file/AwAi6qE11mQllHa1sOROYp/Telegram-Mini-Apps-·%C2%A0UI-Kit?type=design&node-id=48-396&mode=design&t=wO8NRmLsNTRplvzT-0
