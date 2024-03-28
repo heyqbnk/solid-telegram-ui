@@ -1,0 +1,25 @@
+@use "../../scss/palette" as palette;
+
+$block: "tgui-avatar";
+
+.#{$block} {
+  display: flex;
+  background-color: palette.refer-bem-css-var($block, "bg-color", "skeleton");
+  border-radius: 50%;
+  width: fit-content;
+  overflow: hidden;
+  position: relative;
+
+  &__image {
+    background: transparent;
+    position: relative;
+  }
+
+  &__caption {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+    text-align: center;
+  }
+}
