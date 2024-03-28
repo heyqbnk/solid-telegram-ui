@@ -1,15 +1,15 @@
 import {
-  type Component,
   createEffect,
   createSignal,
   For,
-  type JSXElement,
   mergeProps,
   onCleanup,
 } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 import { TransitionGroup } from 'solid-transition-group';
+import type { Component, JSX, JSXElement } from 'solid-js';
 
+import { mergeHandlers } from '~/helpers/mergeHandlers.js';
 import { sanitizeCommon } from '~/helpers/sanitizeCommon.js';
 import { withConfig } from '~/hocs/withConfig.js';
 import type { JSXIntrinsicElement } from '~/types/jsx.js';
@@ -20,7 +20,6 @@ import { createClasses } from '~/styles/createClasses.js';
 import { styled } from '~/styles/styled.js';
 
 import type {
-  PointerEventHandler,
   RippleData,
   RipplesDefaults,
   RipplesIntrinsicProps,
@@ -66,24 +65,9 @@ export const Ripples: RipplesComponent = withConfig(
       return prevRipples.filter((r) => r.id !== id);
     });
 
-    // Pointer leave handler which drops active ripple.
-    const onPointerLeave: PointerEventHandler = (e) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      merged.onPointerLeave && (merged as any).onPointerLeave(e);
-
-      dropActiveRipple();
-    };
-
     // Pointer down handler which adds new ripple.
-    const onPointerDown: PointerEventHandler = (e) => {
-      const {
-        disable,
-        onPointerDown: propsOnPointerDown,
-      } = merged;
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      propsOnPointerDown && (propsOnPointerDown as any)(e);
-      if (disable) {
+    const onPointerDown: JSX.EventHandler<HTMLElement, PointerEvent> = (e) => {
+      if (merged.disable) {
         return;
       }
 
@@ -98,17 +82,14 @@ export const Ripples: RipplesComponent = withConfig(
         left,
         top,
       } = currentTarget.getBoundingClientRect();
-      const {
-        radius = Math.max(width, height) * 1.5,
-        centered,
-      } = merged;
+      const radius = merged.radius || (Math.max(width, height) * 1.5);
 
       const id = Math.random().toString();
       const ripple = {
         id,
         size: radius * 2,
-        left: centered ? (width / 2) : (clientX - left) - radius,
-        top: centered ? (height / 2) : (clientY - top) - radius,
+        left: merged.centered ? (width / 2) : (clientX - left) - radius,
+        top: merged.centered ? (height / 2) : (clientY - top) - radius,
       };
       setActiveRipple(id);
       setRipples((prevRipples) => [...prevRipples, ripple]);
@@ -168,14 +149,10 @@ export const Ripples: RipplesComponent = withConfig(
 
     return (
       <Dynamic
-        {...mergeProps(
-          sanitizeCommon(merged, ['overlay', 'centered', 'disable']),
-          {
-            onPointerDown,
-            onPointerLeave,
-            class: classes().root,
-          },
-        )}
+        {...sanitizeCommon(merged, ['overlay', 'centered', 'disable'])}
+        onPointerDown={mergeHandlers(merged.onPointerDown, onPointerDown)}
+        onPointerLeave={mergeHandlers(merged.onPointerLeave, dropActiveRipple)}
+        class={classes().root}
       >
         <div class={classes().content}>
           {merged.children}
