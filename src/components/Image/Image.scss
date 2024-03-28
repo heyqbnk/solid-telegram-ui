@@ -1,0 +1,22 @@
+@use "../../scss/palette" as palette;
+
+$block: "tgui-image";
+
+.#{$block} {
+  background-color: palette.refer-bem-css-var($block, "bg-color", "skeleton");
+  outline: 0.5px palette.refer-bem-css-var($block, "border-color", "outline");
+  object-position: center;
+  object-fit: cover;
+
+  &--sm {
+    border-radius: 4px;
+  }
+
+  &--md {
+    border-radius: 8px;
+  }
+
+  &--lg {
+    border-radius: 12px;
+  }
+}
