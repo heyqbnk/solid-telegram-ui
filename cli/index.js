@@ -1,8 +1,8 @@
 import { Command } from 'commander';
 
 import packageJson from '../package.json' assert { type: 'json' };
-import { buildIconsCommand } from './buildIconsCommand.js';
-import { createComponentCommand } from './createComponentCommand.js';
+import { buildIconsCommand } from './cmd/build-icons/buildIconsCommand.js';
+import { createComponentCommand } from './cmd/create-component/createComponentCommand.js';
 
 const program = new Command();
 

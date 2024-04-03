@@ -1,0 +1,6 @@
+@use "../../scss/palette" as palette;
+
+$block: "$1";
+
+.#{$block} {
+}

@@ -1,13 +1,14 @@
 import { Command } from 'commander';
 import { resolve } from 'node:path';
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync } from 'node:fs';
 import {
+  createWithLog,
   getComponentSCSSFileContent,
   getComponentsDir,
   getComponentSolidFileContent,
   getComponentTypesFileContent,
   isValidComponentName,
-} from './utils.js';
+} from '../../utils.js';
 
 export const createComponentCommand = new Command('create-component');
 
@@ -24,7 +25,7 @@ createComponentCommand
     }
 
     mkdirSync(targetDir);
-    writeFileSync(resolve(targetDir, `${name}.scss`), getComponentSCSSFileContent(name));
-    writeFileSync(resolve(targetDir, `${name}.tsx`), getComponentSolidFileContent(name));
-    writeFileSync(resolve(targetDir, `${name}.types.ts`), getComponentTypesFileContent(name));
+    createWithLog(resolve(targetDir, `${name}.scss`), getComponentSCSSFileContent(name));
+    createWithLog(resolve(targetDir, `${name}.tsx`), getComponentSolidFileContent(name));
+    createWithLog(resolve(targetDir, `${name}.types.ts`), getComponentTypesFileContent(name));
   });

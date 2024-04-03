@@ -1,5 +1,29 @@
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { readFileSync, writeFileSync } from 'node:fs';
+import chalk from 'chalk';
+
+const { bold, green } = chalk;
+
+/**
+ * @return {string} Project root directory.
+ */
+export function getRootDir() {
+  return resolve(dirname(fileURLToPath(import.meta.url)), '..');
+}
+
+/**
+ * @param {string} fileName - template file name.
+ * @param {string[]} [variables] - list of variables to apply.
+ * @return {string} Applied template content.
+ */
+export function useTemplate(fileName, variables = []) {
+  let content = readFileSync(resolve(getRootDir(), 'cli/templates', fileName)).toString();
+  variables.forEach((value, idx) => {
+    content = content.replaceAll(`$${idx + 1}`, value);
+  });
+  return content;
+}
 
 /**
  * @param name - component name
@@ -21,7 +45,7 @@ export function classNameFromComponent(name) {
  * @return {string} Absolute components directory.
  */
 export function getComponentsDir() {
-  return resolve(dirname(fileURLToPath(import.meta.url)), '../src/components');
+  return resolve(getRootDir(), 'src/components');
 }
 
 /**
@@ -29,13 +53,7 @@ export function getComponentsDir() {
  * @return {string} Content of file responsible for component styles.
  */
 export function getComponentSCSSFileContent(name) {
-  return `@use "../../scss/palette" as palette;
-    
-$block: "${classNameFromComponent(name)}";
-
-.#{$block} {
-}
-`;
+  return useTemplate('Component.scss', [classNameFromComponent(name)]);
 }
 
 /**
@@ -43,33 +61,7 @@ $block: "${classNameFromComponent(name)}";
  * @return {string} Content of file responsible for Solid.js component implementation.
  */
 export function getComponentSolidFileContent(name) {
-  return `import { mergeProps } from 'solid-js';
-
-import { withConfig, type WithConfigComponent } from '~/hocs/withConfig.js';
-
-import { bemcn } from '~/styles/bemcn.js';
-import { createClasses } from '~/styles/createClasses.js';
-import { styled } from '~/styles/styled.js';
-    
-import type { ${name}Props, ${name}Defaults } from './${name}.types.js';
-
-import './${name}.scss';
-    
-const block = bemcn('${classNameFromComponent(name)}');
-
-export const ${name}: WithConfigComponent<${name}Props> = withConfig(
-  styled((props: ${name}Props) => {
-    const merged = mergeProps({} satisfies ${name}Defaults, props);
-    const classes = createClasses(merged);
-    
-    return (
-      <div class={classes().root}></div>
-    );
-  }, {
-    root: block.calc(),
-  }),
-);
-`;
+  return useTemplate('Component.tsx', [name, classNameFromComponent(name)]);
 }
 
 /**
@@ -77,33 +69,21 @@ export const ${name}: WithConfigComponent<${name}Props> = withConfig(
  * @return {string} Content of file responsible for Solid.js component typings.
  */
 export function getComponentTypesFileContent(name) {
-  return `import type { WithConfig } from '~/types/known.js';
-import type { RequiredBy } from '~/types/utils.js';
-
-import type { WithOptionalClasses } from '~/styles/types.js';
-
-/**
- * ${name} component element keys allowed to be customized.
- */
-export type ${name}ElementKey = 'root';
-
-/**
- * ${name} component properties, having defaults.
- */
-export interface ${name}Defaults {}
-
-/**
- * ${name} component public properties.
- */
-export interface ${name}Props 
-  extends WithConfig, 
-    ${name}Defaults, 
-    WithOptionalClasses<${name}ElementKey, ${name}ClassesProps> {}
-    
-/**
- * ${name} component properties passed to the classes hooks.
- */
-export interface ${name}ClassesProps extends RequiredBy<${name}Props, keyof ${name}Defaults> {
+  return useTemplate('Component.types.ts', [name]);
 }
-`;
+
+/**
+ * @return {string}
+ */
+export function getCreateIconComponentFileContent() {
+  return useTemplate('createIconComponent.tsx');
+}
+
+/**
+ * @param {string} path - file path.
+ * @param {string} content - file content.
+ */
+export function createWithLog(path, content) {
+  writeFileSync(path, content);
+  console.log(`${bold('Created file')}: ${green(path)}`);
 }
