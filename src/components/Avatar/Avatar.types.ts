@@ -42,7 +42,7 @@ export interface AvatarProps
 }
 
 /**
- * Badge component properties passed to the classes hooks.
+ * Avatar component properties passed to the classes hooks.
  */
 export interface AvatarClassesProps extends RequiredBy<AvatarProps, keyof AvatarDefaults> {
 }

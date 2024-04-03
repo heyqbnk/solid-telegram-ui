@@ -25,7 +25,7 @@ export const Playground: Story = {
   args: {
     size: 40,
     caption: 'JJ',
-    src: 'https://avatars.githubusercontent.com/u/148220002?s=200&v=4',
+    src: 'https://avatars.githubusercontent.com/u/148220002',
   },
   argTypes: {
     size: {
