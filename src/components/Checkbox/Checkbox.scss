@@ -1,0 +1,67 @@
+@use "../../scss/palette" as palette;
+
+$initial-scale: 0.5;
+$block: "tgui-checkbox";
+
+.#{$block} {
+  position: relative;
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  outline: 2px solid palette.refer-bem-css-var($block, "border-color", "outline");
+  outline-offset: -2px;
+  color: palette.refer-bem-css-var($block, "icon-color", "white");
+  transition: opacity 200ms;
+
+  &--disabled {
+    opacity: 0.3;
+  }
+
+  &--base {
+    border-radius: 4.5px;
+  }
+
+  &--ios {
+    border-radius: 5.5px;
+  }
+
+  &__input, &__indeterminate, &__check {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__indeterminate:before {
+    content: '';
+    height: 2px;
+    width: 12px;
+    border-radius: 1px;
+    background-color: currentColor;
+  }
+
+  &__indeterminate, &__check {
+    border-radius: inherit;
+    background-color: palette.refer-bem-css-var($block, "bg-color", "link-color");
+    transform-origin: 50%;
+    transform: scale3d($initial-scale, $initial-scale, $initial-scale);
+    transition: all 200ms cubic-bezier(0.530, -0.005, 0.520, 1.650);
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__input {
+    opacity: 0;
+    z-index: 1;
+    appearance: none;
+    margin: 0;
+
+    &:indeterminate ~ .#{$block}__indeterminate,
+    &:checked ~ .#{$block}__check {
+      opacity: 1;
+      transform: scale3d(1,1,1);
+    }
+  }
+}
